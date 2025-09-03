@@ -8,24 +8,24 @@ from collections import defaultdict
 # ------------------- Setup -------------------
 model = YOLO("yolo11n.pt")
 
-# Vehicle classes in COCO
+# Vehicle classes
 vehicle_classes = {"car": 2, "motorbike": 3, "bus": 5, "truck": 7}
 vehicle_counts = defaultdict(int)
 
-# Initialize ByteTrack from supervision
+# Initializing ByteTrack
 tracker = sv.ByteTrack()
 
 # Horizontal counting line
 line_y = 200
 crossed_ids = set()
 
-# CSV file
+# opening CSV file
 csv_file = open("vehicle_line_counts.csv", "w", newline="")
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["Timestamp", "Car", "Motorbike", "Bus", "Truck"])
 
-# Open video
-cap = cv2.VideoCapture("sample3.mp4")  # replace with your video path
+# Opening video file/ live feed
+cap = cv2.VideoCapture("sample3.mp4")  
 
 while True:
     ret, frame = cap.read()
@@ -36,14 +36,14 @@ while True:
     results = model(frame, verbose=False)[0]
     detections = sv.Detections.from_ultralytics(results)
 
-    # Filter only vehicles
+    # Filtering for vehicles
     mask = [cls in vehicle_classes.values() for cls in detections.class_id]
     detections = detections[mask]
 
-    # Track objects
+    # Tracking objects
     tracks = tracker.update_with_detections(detections)
 
-    # Draw counting line
+    # Drawing counting line
     cv2.line(frame, (0, line_y), (frame.shape[1], line_y), (0, 255, 255), 2)
 
     for xyxy, cls_id, track_id in zip(tracks.xyxy, tracks.class_id, tracks.tracker_id):
@@ -52,7 +52,7 @@ while True:
 
         label = [k for k, v in vehicle_classes.items() if v == cls_id][0]
 
-        # Draw box + ID
+        # Drawing box + ID
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(frame, f"{label} ID:{track_id}", (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
@@ -86,3 +86,4 @@ cap.release()
 cv2.destroyAllWindows()
 csv_file.close()
 print("Final counts:", dict(vehicle_counts))
+
