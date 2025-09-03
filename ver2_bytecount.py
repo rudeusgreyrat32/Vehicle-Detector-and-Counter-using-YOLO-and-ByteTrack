@@ -24,7 +24,7 @@ csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["Timestamp", "Car", "Motorbike", "Bus", "Truck"])
 
 # Opening video file/ live feed
-cap = cv2.VideoCapture("sample3.mp4")  
+cap = cv2.VideoCapture("sample6.mp4")  
 
 while True:
     ret, frame = cap.read()
@@ -85,6 +85,7 @@ cap.release()
 cv2.destroyAllWindows()
 csv_file.close()
 print("Final counts:", dict(vehicle_counts))
+
 
 
 
