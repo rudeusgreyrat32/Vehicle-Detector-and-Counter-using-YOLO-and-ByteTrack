@@ -57,18 +57,18 @@ while True:
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
         cv2.circle(frame, (cx, cy), 5, (0, 0, 255), -1)
 
-        # Count line crossing
+        # Counting line crossing
         if line_y - 5 < cy < line_y + 5 and track_id not in crossed_ids:
             vehicle_counts[label] += 1
             crossed_ids.add(track_id)
 
-    # Show counts
+    # To see counts on screen
     y0 = 30
     for i, (veh, count) in enumerate(vehicle_counts.items()):
         cv2.putText(frame, f"{veh}: {count}", (10, y0 + i*30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
-    # Save counts every 5s
+    # Saving
     if int(time.time()) % 5 == 0:
         csv_writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"),
                              vehicle_counts["car"],
@@ -85,5 +85,6 @@ cap.release()
 cv2.destroyAllWindows()
 csv_file.close()
 print("Final counts:", dict(vehicle_counts))
+
 
 
