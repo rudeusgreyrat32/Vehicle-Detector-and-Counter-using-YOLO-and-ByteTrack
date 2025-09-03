@@ -5,7 +5,6 @@ import csv
 import time
 from collections import defaultdict
 
-# ------------------- Setup -------------------
 model = YOLO("yolo11n.pt")
 
 # Vehicle classes
@@ -86,4 +85,5 @@ cap.release()
 cv2.destroyAllWindows()
 csv_file.close()
 print("Final counts:", dict(vehicle_counts))
+
 
